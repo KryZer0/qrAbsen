@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SetUpActivity"
+    android:background="#ffaec9"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:background="@drawable/placeholder"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="8dp"
+        android:background="#00a2e8"
+        android:gravity="center"
+        android:text="@string/setup"
+        android:textColor="#ffaec9"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="350dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/kotaklogin"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/urlip"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:background="@drawable/textbox"
+            android:hint="@string/url"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:singleLine="true"/>
+
+        <EditText
+            android:id="@+id/port"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/textbox"
+            android:hint="@string/port"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/black"
+            android:inputType="number"
+            android:textSize="15sp"
+            android:singleLine="true"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/setupbtn"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/squared_button"
+            android:text="Set"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="10dp"/>
+    </LinearLayout>
+</LinearLayout>

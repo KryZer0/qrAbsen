@@ -1,0 +1,29 @@
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#3ddc84</color>
+    <color name="gray">#3c3f41</color>
+    <color name="red">#f14c4c</color>
+    <color name="pink">#ffaec9</color>
+    <color name="lightBlue">#00a2e8</color>
+
+    <!-- Warna untuk Protanopia (Buta Warna Merah) -->
+    <color name="protanopia_blue">#0077B6</color>
+    <color name="protanopia_yellow">#FFD700</color>
+    <color name="protanopia_orange">#FF8C42</color>
+
+    <!-- Warna untuk Deuteranopia (Buta Warna Hijau) -->
+    <color name="deuteranopia_blue">#005F73</color>
+    <color name="deuteranopia_yellow">#FFC300</color>
+    <color name="deuteranopia_purple">#6A4C93</color>
+
+    <!-- Warna untuk Tritanopia (Buta Warna Biru) -->
+    <color name="tritanopia_red">#E63946</color>
+    <color name="tritanopia_green">#2A9D8F</color>
+    <color name="tritanopia_pink">#FF6F61</color>
+</resources>

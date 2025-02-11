@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">qrcodeAbsen</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="qrabsen">QRABSEN</string>
+    <string name="login">Login</string>
+    <string name="setup">Setup Aplikasi</string>
+    <string name="url">Url / Ip</string>
+    <string name="port">Port</string>
+</resources>
