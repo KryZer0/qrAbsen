@@ -2,7 +2,7 @@ package com.example.qrcodeabsen;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
@@ -47,31 +47,38 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAbsenMasuk, btnAbsenKeluar;
     private TextView textAbsen;
     private Toast toastMessage;
-    private int statusAbsen;
-
+    private boolean statusAbsen;
+    private String absenStatus;
     private long lastScanTime = 0;
     private static final long SCAN_DELAY_MS = 3000;
-    private String lastScannedQR = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        statusAbsen = 1;
         textAbsen = findViewById(R.id.absenText);
         btnAbsenMasuk = findViewById(R.id.btn_absen_masuk);
-        btnAbsenMasuk.setOnClickListener(v -> {
-            setButtonState(true); // Aktifkan Absen Keluar, nonaktifkan Absen Masuk
-        });
-
+        btnAbsenMasuk.setOnClickListener(v -> setButtonState(true));
         btnAbsenKeluar = findViewById(R.id.btn_absen_keluar);
-        btnAbsenKeluar.setOnClickListener(v -> {
-            setButtonState(false); // Aktifkan Absen Masuk, nonaktifkan Absen Keluar
-        });
+        btnAbsenKeluar.setOnClickListener(v -> setButtonState(false));
         previewView = findViewById(R.id.view_finder);
         cameraExecutor = Executors.newFixedThreadPool(2);
+        setStatusAbsen();
         requestCameraPermission();
+    }
+    private void setStatusAbsen ()
+    {
+        Intent intent = getIntent();
+        absenStatus = intent.getStringExtra("absen");
+        if (("checkin").equals(absenStatus))
+        {
+            statusAbsen = true;
+        }
+        if (("checkout").equals(absenStatus))
+        {
+            statusAbsen = false;
+        }
+        setButtonState(statusAbsen);
     }
     private void setButtonState(boolean isAbsenMasukDiproses) {
         if (isAbsenMasukDiproses) {
@@ -81,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             btnAbsenKeluar.setEnabled(true); // Aktifkan tombol Absen Keluar
             btnAbsenKeluar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green));
             textAbsen.setText("Absen Masuk");
-            statusAbsen = 1;
+            statusAbsen = true;
         } else {
             // Logika ketika tombol Absen Keluar ditekan
             btnAbsenKeluar.setEnabled(false); // Nonaktifkan tombol Absen Keluar
@@ -89,9 +96,10 @@ public class MainActivity extends AppCompatActivity {
             btnAbsenMasuk.setEnabled(true); // Aktifkan tombol Absen Masuk
             btnAbsenMasuk.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green)); // Ubah warna tombol
             textAbsen.setText("Absen Pulang");
-            statusAbsen = 0;
+            statusAbsen = false;
         }
     }
+
     private void requestCameraPermission() {
         // Lakukan pengecekan izin mengakses kamera granted
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -188,9 +196,7 @@ public class MainActivity extends AppCompatActivity {
                         new Thread(() -> sendToServer(nisn)).start();
                     }
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("QR_SCAN", "Gagal memindai QR code: " + e.getMessage());
-                })
+                .addOnFailureListener(e -> Log.e("QR_SCAN", "Gagal memindai QR code: " + e.getMessage()))
                 .addOnCompleteListener(task -> onComplete.run()); // Tutup imageProxy setelah pemindaian selesai
     }
     //  Setelah melakukan pemindaian QRCode, aplikasi akan mendapatkan nisn yang terdapat pada QRCode
@@ -198,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendToServer(String qrData) {
         Call<ResponseBody> call;
-        if (statusAbsen == 1) {
+        if (statusAbsen) {
             call = apiService.check(qrData);
         } else {
             call = apiService.checkout(qrData);
@@ -206,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
                     // Handle success
                     Log.d("API_RESPONSE", "Check-in successful");
@@ -231,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 if (t instanceof IOException) {
                     Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
                 } else {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">qrcodeAbsen</string>
+    <string name="password">Kata Sandi</string>
+    <string name="username">Nama Pengguna</string>
+    <string name="qrabsen">QRABSEN</string>
+    <string name="login">Login</string>
+    <string name="setup">Setup Aplikasi</string>
+    <string name="url">Url / Ip</string>
+    <string name="port">Port</string>
+    <string name="masuk">Masuk</string>
+    <string name="keluar">Keluar</string>
+    <string name="history">Sejarah</string>
+    <string name="don_t_have_an_account">Tidak Punya Akun ?</string>
+    <string name="sign_up">Mendaftar</string>
+</resources>

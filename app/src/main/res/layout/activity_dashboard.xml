@@ -1,60 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!-- Konten utama di sini -->
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Dashboard"
-        android:textSize="24sp" />
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/gray"
+    >
 
     <LinearLayout
-        android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#ffaec9"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:weightSum="2">
+        android:layout_height="165dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btnLeft"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:text="Left"
-            android:textColor="@android:color/black"
+            android:id="@+id/check_in_btn"
+            android:layout_width="360dp"
+            android:layout_height="160dp"
+            android:background="@drawable/rounded_green_btn"
+            android:drawableBottom="@drawable/masuk"
+            android:drawablePadding="25dp"
+            android:gravity="bottom|center"
+            android:paddingBottom="25dp"
+            android:text="@string/masuk"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/btnRight"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:text="Right"
-            android:textColor="@android:color/black" />
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnCenter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="40dp"
-        android:backgroundTint="#00a2e8"
-        android:padding="12dp"
-        android:scaleType="centerInside"
-        android:src="@drawable/camera"
-        app:fabSize="normal"
-        app:tint="@android:color/black" />
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/check_out_btn"
+            android:layout_width="360dp"
+            android:layout_height="160dp"
+            android:background="@drawable/rounded_red_btn"
+            android:drawableBottom="@drawable/logout"
+            android:drawablePadding="25dp"
+            android:gravity="bottom|center"
+            android:paddingBottom="25dp"
+            android:text="@string/keluar"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/history_btn"
+            android:layout_width="360dp"
+            android:layout_height="160dp"
+            android:background="@drawable/rounded_blue_btn"
+            android:drawableBottom="@drawable/history"
+            android:drawablePadding="25dp"
+            android:gravity="bottom|center"
+            android:paddingBottom="25dp"
+            android:text="@string/history"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

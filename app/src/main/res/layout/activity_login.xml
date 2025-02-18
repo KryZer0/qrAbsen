@@ -62,13 +62,13 @@
             android:textSize="15sp"
             android:singleLine="true"/>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/loginButton"
             android:layout_width="150dp"
             android:layout_height="40dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/squared_button"
-            android:text="Login"
+            android:text="@string/login"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -86,9 +86,9 @@
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:gravity="center"
-            android:text="Don't have an account ?"
+            android:text="@string/don_t_have_an_account"
             android:textColor="#fff"
-            android:textSize="12dp"
+            android:textSize="12sp"
             android:textStyle="bold" />
 
         <TextView
@@ -96,7 +96,7 @@
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:onClick="SignUp"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:textColor="#48C2B6"
             android:textSize="12dp"
             android:textStyle="bold" />

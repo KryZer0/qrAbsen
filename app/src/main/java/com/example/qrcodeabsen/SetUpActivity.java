@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ import com.google.android.material.button.MaterialButton;
 public class SetUpActivity extends AppCompatActivity
 {
     private EditText url, port;
-    private MaterialButton btnSetup;
+    private Button btnSetup;
     private ImageView logoButton;
     SharedPreferences sharedPreferences;
     private static final String PREF_NAME = "UrlPrefs";

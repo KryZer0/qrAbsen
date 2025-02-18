@@ -15,7 +15,7 @@ import com.google.android.material.button.MaterialButton;
 public class LoginActivity extends AppCompatActivity
 {
     private EditText Username, Password;
-    private MaterialButton btnLogin;
+    private Button btnLogin;
     private ImageView logoButton;
     private Toast toastMessage;
     private int setUpCounter = 5;
