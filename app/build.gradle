@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+//    id 'com.google.gms.google-services'
 }
 
 android {
@@ -23,8 +24,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
 
@@ -42,6 +43,7 @@ dependencies {
     implementation 'com.google.mlkit:barcode-scanning:17.2.0'
     implementation 'com.google.guava:guava:31.0.1-android'
     implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.firebase:firebase-messaging:23.0.3'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

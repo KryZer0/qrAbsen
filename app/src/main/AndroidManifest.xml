@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -14,6 +16,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QrcodeAbsen"
         tools:targetApi="31">
+
+<!--        <service-->
+<!--            android:name=".PushNotification"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
+<!--            </intent-filter>-->
+<!--        </service>-->
 
         <activity
             android:name=".LoginActivity"
@@ -28,6 +38,7 @@
         <activity
             android:name=".MainActivity">
         </activity>
+        <activity android:name=".HistoryActivity"/>
     </application>
 
 </manifest>

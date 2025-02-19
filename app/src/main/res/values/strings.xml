@@ -12,4 +12,15 @@
     <string name="history">History</string>
     <string name="don_t_have_an_account">Don\'t have an account ?</string>
     <string name="sign_up">Sign Up</string>
+    <string name="absen_masuk">Check In</string>
+    <string name="absen_pulang">Check Out</string>
+    <string name="no">No</string>
+    <string name="nisn">NISN</string>
+    <string name="ket">Keterangan</string>
+    <string name="jam_masuk">Jam Masuk</string>
+    <string name="datang">Datang</string>
+    <string name="jam_pulang">Jam Pulang</string>
+    <string name="pulang">Pulang</string>
+    <string name="cari">Search</string>
+    <string name="tanggal">Tanggal</string>
 </resources>

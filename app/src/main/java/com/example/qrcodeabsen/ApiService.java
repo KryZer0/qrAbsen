@@ -1,5 +1,7 @@
 package com.example.qrcodeabsen;
 
+import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -14,4 +16,7 @@ public interface ApiService {
 
     @PATCH("/checkout/{nisn}")
     Call<ResponseBody> checkout(@Path("nisn") String nisn);
+
+    @GET("history")
+    Call<List<AbsensiModel>> getHistory();
 }

@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Size;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,9 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView textAbsen;
     private Toast toastMessage;
     private boolean statusAbsen;
-    private String absenStatus;
     private long lastScanTime = 0;
-    private static final long SCAN_DELAY_MS = 3000;
+    private static final long SCAN_DELAY_MS = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,14 +62,14 @@ public class MainActivity extends AppCompatActivity {
         btnAbsenKeluar = findViewById(R.id.btn_absen_keluar);
         btnAbsenKeluar.setOnClickListener(v -> setButtonState(false));
         previewView = findViewById(R.id.view_finder);
-        cameraExecutor = Executors.newFixedThreadPool(2);
+        cameraExecutor = Executors.newSingleThreadExecutor();
         setStatusAbsen();
         requestCameraPermission();
     }
     private void setStatusAbsen ()
     {
         Intent intent = getIntent();
-        absenStatus = intent.getStringExtra("absen");
+        String absenStatus = intent.getStringExtra("absen");
         if (("checkin").equals(absenStatus))
         {
             statusAbsen = true;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             btnAbsenMasuk.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.gray));
             btnAbsenKeluar.setEnabled(true); // Aktifkan tombol Absen Keluar
             btnAbsenKeluar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green));
-            textAbsen.setText("Absen Masuk");
+            textAbsen.setText(R.string.absen_masuk);
             statusAbsen = true;
         } else {
             // Logika ketika tombol Absen Keluar ditekan
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             btnAbsenKeluar.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.gray)); // Ubah warna tombol
             btnAbsenMasuk.setEnabled(true); // Aktifkan tombol Absen Masuk
             btnAbsenMasuk.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.green)); // Ubah warna tombol
-            textAbsen.setText("Absen Pulang");
+            textAbsen.setText(R.string.absen_pulang);
             statusAbsen = false;
         }
     }

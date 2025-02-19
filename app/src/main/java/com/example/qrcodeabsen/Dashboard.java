@@ -26,6 +26,7 @@ public class Dashboard extends AppCompatActivity {
     {
         checkIn.setOnClickListener(v -> checkIn());
         checkOut.setOnClickListener(v -> checkOut());
+        history.setOnClickListener(v -> history());
     }
 
     private void checkIn()
@@ -39,6 +40,12 @@ public class Dashboard extends AppCompatActivity {
     {
         Intent intent = new Intent(Dashboard.this,MainActivity.class);
         intent.putExtra("absen","checkout");
+        startActivity(intent);
+    }
+
+    private void history()
+    {
+        Intent intent = new Intent(Dashboard.this,HistoryActivity.class);
         startActivity(intent);
     }
 }
