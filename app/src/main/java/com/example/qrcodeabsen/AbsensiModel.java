@@ -6,17 +6,14 @@ import java.util.Date;
 import java.util.Locale;
 
 public class AbsensiModel {
-    private String nisn;
-    private String kelas;
-    private String keterangan;
-    private String tanggal;
-    private String jam_masuk;
-    private String jam_keluar;
+    private String nisn, kelas, keterangan, jam_keluar, jam_masuk, tanggal, nama;
+
 
     public AbsensiModel(String nisn, String kelas, String keterangan, String jam_masuk, String jam_keluar) {
         this.nisn = nisn;
         this.kelas = kelas;
         this.keterangan = keterangan;
+        this.nama = nama;
         this.tanggal = tanggal;
         this.jam_masuk = jam_masuk;
         this.jam_keluar = jam_keluar;
@@ -25,6 +22,7 @@ public class AbsensiModel {
     public String getNisn() {
         return nisn;
     }
+    public String getNama() {return nama;}
 
     public String getKelas() {
         return kelas;
@@ -48,10 +46,10 @@ public class AbsensiModel {
         SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 
         try {
-            Date date = inputFormat.parse(tanggal); // Konversi ke objek Date
-            return outputFormat.format(date); // Ubah ke format baru
+            Date date = inputFormat.parse(tanggal);
+            return outputFormat.format(date);
         } catch (ParseException e) {
-            return tanggal; // Jika error, kembalikan tanggal asli
+            return tanggal;
         }
     }
 }

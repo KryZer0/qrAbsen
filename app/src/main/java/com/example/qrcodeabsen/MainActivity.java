@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.Size;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -227,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                     if (response.errorBody() != null) {
                         errorMessage = getErrorMessage(response.errorBody());
                     }
-                    Log.e("API_RESPONSE", "Check-in failed: " + errorMessage);
                     if (toastMessage != null) {
                         toastMessage.cancel();
                     }

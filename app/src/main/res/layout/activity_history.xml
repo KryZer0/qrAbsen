@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/squared_box"
-                    android:text="@string/nisn"
+                    android:text="@string/nama"
                     android:gravity="center"
                     android:padding="8dp"
                     android:textStyle="bold"/>

@@ -1,8 +1,9 @@
 package com.example.qrcodeabsen;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Button;
@@ -14,7 +15,6 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -59,6 +59,23 @@ public class HistoryActivity extends AppCompatActivity {
         JamMasuk.setOnClickListener(v -> history("jam_masuk"));
         JamPulang.setOnClickListener(v -> history("jam_pulang"));
         searchButton.setOnClickListener(v -> searchHistory(searchText.getText().toString()));
+        searchText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Tidak digunakan
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchHistory(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Tidak digunakan
+            }
+        });
+
     }
 
     private void fetchHistory() {
@@ -91,7 +108,7 @@ public class HistoryActivity extends AppCompatActivity {
             TableRow tbrow = new TableRow(this);
 
             tbrow.addView(createTextView(String.valueOf(i + 1)));
-            tbrow.addView(createTextView(absensi.getNisn()));
+            tbrow.addView(createTextView(absensi.getNama()));
             tbrow.addView(createTextView(absensi.getketerangan()));
             tbrow.addView(createTextView(absensi.getTanggal()));
             tbrow.addView(createTextView(absensi.getJamMasuk()));
@@ -107,7 +124,7 @@ public class HistoryActivity extends AppCompatActivity {
         Comparator<AbsensiModel> comparator;
         switch (column) {
             case "nisn":
-                comparator = Comparator.comparing(AbsensiModel::getNisn);
+                comparator = Comparator.comparing(AbsensiModel::getNama);
                 break;
             case "keterangan":
                 comparator = Comparator.comparing(AbsensiModel::getketerangan);
@@ -132,8 +149,8 @@ public class HistoryActivity extends AppCompatActivity {
             Collections.sort(data, comparator.reversed());
 
         }
-        isAscending = !isAscending; // Ubah status sorting
-        initTable(); // Refresh tampilan tabel
+        isAscending = !isAscending;
+        initTable();
     }
 
     private TextView createTextView(String text) {
@@ -162,20 +179,62 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void searchHistory(String query) {
-        if (originalData == null) return; // Jika data belum dimuat, hentikan
+        if (originalData == null) return;
 
         List<AbsensiModel> filteredData = new ArrayList<>();
 
-        for (AbsensiModel absensi : originalData) {
-            if (absensi.getNisn().contains(query) ||
-                    absensi.getketerangan().toLowerCase().contains(query.toLowerCase()) ||
-                    absensi.getJamMasuk().contains(query) ||
-                    absensi.getJamPulang().contains(query)) {
+        // Parsing query
+        String[] parts = query.split("=");
+        if (parts.length != 2) {
+            for (AbsensiModel absensi : originalData) {
+                if (absensi.getNisn().contains(query) ||
+                        absensi.getketerangan().toLowerCase().contains(query.toLowerCase()) ||
+                        absensi.getJamMasuk().contains(query) ||
+                        absensi.getJamPulang().contains(query) ||
+                        absensi.getNama().contains(query)){
 
-                filteredData.add(absensi);
+                    filteredData.add(absensi);
+                }
+            }
+            updateTable(filteredData);
+            return;
+        }
+
+        String key = parts[0].trim().toLowerCase();
+        String value = parts[1].trim();
+
+        for (AbsensiModel absensi : originalData) {
+            switch (key) {
+                case "nisn":
+                    if (absensi.getNisn().contains(value)) {
+                        filteredData.add(absensi);
+                    }
+                    break;
+                case "keterangan":
+                    if (absensi.getketerangan().toLowerCase().contains(value.toLowerCase())) {
+                        filteredData.add(absensi);
+                    }
+                    break;
+                case "jammasuk":
+                    if (absensi.getJamMasuk().contains(value)) {
+                        filteredData.add(absensi);
+                    }
+                    break;
+                case "jampulang":
+                    if (absensi.getJamPulang().contains(value)) {
+                        filteredData.add(absensi);
+                    }
+                    break;
+                case "nama":
+                    if (absensi.getNama().contains(value)){
+                        filteredData.add(absensi);
+                    }
+                default:
+                    // Jika key tidak dikenali, kembalikan semua data atau tampilkan pesan error
+                    updateTable(originalData);
+                    return;
             }
         }
-        // Perbarui tampilan tabel dengan hasil filter
         updateTable(filteredData);
     }
 
@@ -187,7 +246,7 @@ public class HistoryActivity extends AppCompatActivity {
             TableRow tbrow = new TableRow(this);
 
             tbrow.addView(createTextView(String.valueOf(i + 1)));
-            tbrow.addView(createTextView(absensi.getNisn()));
+            tbrow.addView(createTextView(absensi.getNama()));
             tbrow.addView(createTextView(absensi.getketerangan()));
             tbrow.addView(createTextView(absensi.getTanggal()));
             tbrow.addView(createTextView(absensi.getJamMasuk()));
