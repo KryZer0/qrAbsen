@@ -39,7 +39,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private final ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
     private ExecutorService cameraExecutor;
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             call = apiService.checkout(qrData);
         }
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
                     // Handle error
                     String errorMessage = "Terjadi Error";
                     if (response.errorBody() != null) {
-                        errorMessage = getErrorMessage(response.errorBody());
+                        errorMessage = ApiUtils.getErrorMessage(response.errorBody());
                     }
                     if (toastMessage != null) {
                         toastMessage.cancel();
@@ -236,25 +236,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+
                 if (t instanceof IOException) {
-                    Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_SHORT).show();
+                    toastMessage = Toast.makeText(MainActivity.this, "No Internet Connection", Toast.LENGTH_SHORT);
+                    toastMessage.show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Server Error", Toast.LENGTH_SHORT).show();
+                    toastMessage = Toast.makeText(MainActivity.this, "Server Error", Toast.LENGTH_SHORT);
+                    toastMessage.show();
                 }
                 Log.e("API_RESPONSE", "Check-in failed: " + t.getMessage());
             }
         });
-    }
-
-    private String getErrorMessage(ResponseBody errorBody) {
-        try {
-            // Assuming the error response is in JSON format
-            JsonObject errorJson = new JsonParser().parse(errorBody.string()).getAsJsonObject();
-            return errorJson.get("message").getAsString();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "An error occurred";
-        }
     }
 
     @SuppressLint("ClickableViewAccessibility")

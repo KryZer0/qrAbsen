@@ -12,6 +12,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,7 +25,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HistoryActivity extends AppCompatActivity {
+public class HistoryActivity extends BaseActivity {
     private final ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
     private TableLayout stk;
     private List<AbsensiModel> data, originalData;
@@ -35,7 +37,7 @@ public class HistoryActivity extends AppCompatActivity {
     private Button searchButton;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         stk = findViewById(R.id.tableAbsensi);
@@ -83,20 +85,22 @@ public class HistoryActivity extends AppCompatActivity {
 
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<AbsensiModel>> call, Response<List<AbsensiModel>> response) {
+            public void onResponse(@NonNull Call<List<AbsensiModel>> call, @NonNull Response<List<AbsensiModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     data = response.body();
                     originalData = data;
                     initTable();
                 } else {
-                    Toast.makeText(HistoryActivity.this, "Gagal memuat data!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HistoryActivity.this, "Gagal memuat data!", Toast.
+                            LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<AbsensiModel>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<AbsensiModel>> call, @NonNull Throwable t) {
                 Log.e("HistoryActivity", "Error: " + t.getMessage());
-                Toast.makeText(HistoryActivity.this, "Terjadi kesalahan jaringan!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HistoryActivity.this, "Terjadi kesalahan jaringan!",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -144,9 +148,9 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Toggle sorting order
         if (isAscending) {
-            Collections.sort(data, comparator);
+            data.sort(comparator);
         } else {
-            Collections.sort(data, comparator.reversed());
+            data.sort(comparator.reversed());
 
         }
         isAscending = !isAscending;
@@ -185,6 +189,9 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Parsing query
         String[] parts = query.split("=");
+        if (parts[2].contains("\"")) {
+            parts[2].replace("\"", "");
+        }
         if (parts.length != 2) {
             for (AbsensiModel absensi : originalData) {
                 if (absensi.getNisn().contains(query) ||

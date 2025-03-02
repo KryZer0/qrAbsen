@@ -1,14 +1,12 @@
 package com.example.qrcodeabsen;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-
-public class Dashboard extends AppCompatActivity {
-    private Button checkIn, checkOut, history;
+public class Dashboard extends BaseActivity {
+    private Button checkIn, checkOut, history, siswa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,6 +15,7 @@ public class Dashboard extends AppCompatActivity {
         checkIn = findViewById(R.id.check_in_btn);
         checkOut = findViewById(R.id.check_out_btn);
         history = findViewById(R.id.history_btn);
+        siswa = findViewById(R.id.siswa_btn);
         setClickListener();
     }
     private void setClickListener()
@@ -24,6 +23,7 @@ public class Dashboard extends AppCompatActivity {
         checkIn.setOnClickListener(v -> checkIn());
         checkOut.setOnClickListener(v -> checkOut());
         history.setOnClickListener(v -> history());
+        siswa.setOnClickListener(v -> siswa());
     }
 
     private void checkIn()
@@ -44,5 +44,10 @@ public class Dashboard extends AppCompatActivity {
     {
         Intent intent = new Intent(Dashboard.this,HistoryActivity.class);
         startActivity(intent);
+    }
+
+    private void siswa() {
+       Intent intent = new Intent(Dashboard.this, MenuSiswa.class);
+       startActivity(intent);
     }
 }

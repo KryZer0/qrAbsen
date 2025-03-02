@@ -8,15 +8,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 /*  Kelas ini digunakan untuk SetUp Server. Pada masa pengembangan
 *   Local server digunakan, dengan Ip address yang berada di kelas urlConstant
 *   Mempermudah pengembang agar tidak perlu mengganti Ip address setiap kali
 *   sistem mengubah local IP address.
 */
 
-public class SetUpActivity extends AppCompatActivity
+public class SetUpActivity extends BaseActivity
 {
     private EditText url, port;
     private Button btnSetup;

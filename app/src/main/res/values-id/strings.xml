@@ -24,4 +24,13 @@
     <string name="cari">Cari</string>
     <string name="tanggal">Tanggal</string>
     <string name="nama">Nama</string>
+    <string name="nama_siswa">Nama Siswa</string>
+    <string name="nomor_induk_siswa">Nomor Induk Siswa</string>
+    <string name="siswa">Siswa</string>
+    <string name="edit">Edit</string>
+    <string name="tambah_siswa">Tambah Siswa</string>
+    <string name="tambah">Tambah</string>
+    <string name="edit_siswa">Edit Siswa</string>
+    <string name="daftar">Daftar</string>
+    <string name="qr_siswa">QR Siswa</string>
 </resources>

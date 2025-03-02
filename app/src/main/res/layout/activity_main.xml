@@ -30,7 +30,7 @@
         android:id="@+id/absenText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Absen Masuk"
+        android:text=""
         android:gravity="center"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -58,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Absen Masuk"
+            android:text="@string/absen_masuk"
             android:enabled="false"
             android:backgroundTint="@color/gray"
             android:layout_marginEnd="8dp" />
@@ -68,7 +68,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Absen Keluar"
+            android:text="@string/absen_pulang"
             android:enabled="true"
             android:backgroundTint="@color/green"
             android:layout_marginStart="8dp" />

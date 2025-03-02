@@ -75,4 +75,26 @@
             android:textStyle="bold" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="165dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/siswa_btn"
+            android:layout_width="360dp"
+            android:layout_height="160dp"
+            android:background="@drawable/rounded_blue_btn"
+            android:drawableBottom="@drawable/history"
+            android:drawablePadding="25dp"
+            android:gravity="bottom|center"
+            android:paddingBottom="25dp"
+            android:text="@string/siswa"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 </LinearLayout>
