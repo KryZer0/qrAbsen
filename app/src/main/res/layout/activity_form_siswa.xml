@@ -92,12 +92,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_gravity="center|end">
+
         <Button
             android:id="@+id/submitformsiswa"
             android:layout_width="150dp"
             android:layout_height="40dp"
             android:background="@drawable/rounded_green_btn"
-            android:onClick="btnInput"
             android:text="@string/tambah"
             android:textColor="#fff"
             android:textSize="18dp"
@@ -108,10 +108,27 @@
             android:id="@+id/generateQr"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="50dp"
+            android:layout_marginStart="43dp"
             android:layout_marginEnd="50dp"
             android:background="@drawable/rounded_blue_btn"
             android:scaleType="centerInside"
             android:src="@drawable/qr"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center">
+        <Button
+            android:id="@+id/filecsv"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:background="@drawable/rounded_green_btn"
+            android:text="Import CSV"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 </LinearLayout>

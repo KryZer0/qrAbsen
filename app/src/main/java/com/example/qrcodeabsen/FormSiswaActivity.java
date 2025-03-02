@@ -26,7 +26,7 @@ public class FormSiswaActivity extends BaseActivity{
     private TextView header;
     private EditText nisn, nama;
     private Spinner jenis;
-    private Button submit;
+    private Button submit, file;
     private ImageButton qrCodeButton;
     private Toast toastMessage;
     private String status, oldnisn;
@@ -47,17 +47,23 @@ public class FormSiswaActivity extends BaseActivity{
         submit = findViewById(R.id.submitformsiswa);
         header = findViewById(R.id.headerTitle);
         qrCodeButton = findViewById(R.id.generateQr);
+        file = findViewById(R.id.filecsv);
         status = getIntent().getStringExtra("status");
+
         if (status.equals("edit")){
             header.setText(R.string.edit_siswa);
             submit.setText(R.string.edit);
             qrCodeButton.setVisibility(View.VISIBLE);
             qrCodeButton.setEnabled(true);
+            file.setVisibility(View.GONE);
+            file.setEnabled(false);
         } else {
             header.setText(R.string.tambah_siswa);
             submit.setText(R.string.tambah);
             qrCodeButton.setVisibility(View.INVISIBLE);
             qrCodeButton.setEnabled(false);
+            file.setVisibility(View.VISIBLE);
+            file.setEnabled(true);
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, options);
@@ -69,6 +75,7 @@ public class FormSiswaActivity extends BaseActivity{
     private void setClickListener() {
         submit.setOnClickListener(v -> simpanData());
         qrCodeButton.setOnClickListener(v -> generateQr());
+        file.setOnClickListener(v -> CsvImport());
     }
     private void simpanData() {
         String nisnText = nisn.getText().toString();
@@ -196,5 +203,10 @@ public class FormSiswaActivity extends BaseActivity{
                 toastMessage.show();
             }
         });
+    }
+
+    private void CsvImport() {
+        Intent intent = new Intent(FormSiswaActivity.this, CsvImportActivity.class);
+        startActivity(intent);
     }
 }

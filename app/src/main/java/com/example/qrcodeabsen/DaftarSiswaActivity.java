@@ -151,7 +151,7 @@ public class DaftarSiswaActivity extends BaseActivity {
         tv.setGravity(Gravity.CENTER);
         tv.setPadding(16, 8, 16, 8);
         tv.setTextColor(Color.WHITE);
-        tv.setTextSize(22);
+        tv.setTextSize(18);
         tv.setBackgroundResource(R.drawable.squared_box);
         return tv;
     }

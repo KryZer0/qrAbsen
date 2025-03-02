@@ -45,6 +45,7 @@
         <activity android:name=".DaftarSiswaActivity"/>
         <activity android:name=".FormSiswaActivity"
             android:launchMode="singleTask"/>
+        <activity android:name=".CsvImportActivity"/>
     </application>
 
 </manifest>
