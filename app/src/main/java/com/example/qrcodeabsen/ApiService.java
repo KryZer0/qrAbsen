@@ -13,6 +13,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     @POST("api/v1/check/{nisn}")
@@ -22,13 +23,13 @@ public interface ApiService {
     Call<ResponseBody> checkout(@Path("nisn") String nisn);
 
     @GET("api/v1/history")
-    Call<List<AbsensiModel>> getHistory();
+    Call<PaginatedResponse<AbsensiModel>> getHistory(@Query("page") int page, @Query("per_page") int perPage);
 
     @POST("api/v1/siswa/store")
     Call<ResponseBody> tambahSiswa(@Body SiswaModel siswa);
 
     @GET("api/v1/siswa/fetch")
-    Call<List<SiswaModel>> fetchSiswa();
+    Call<PaginatedResponse<SiswaModel>> fetchSiswa(@Query("page") int page, @Query("per_page") int perPage);
 
     @PUT("api/v1/siswa/update/{nisn}")
     Call<ResponseBody> updateSiswa(@Path("nisn")String oldnisn, @Body SiswaModel siswa);
@@ -42,4 +43,7 @@ public interface ApiService {
     @Multipart
     @POST("api/v1/siswa/store-batch")
     Call<ResponseBody> uploadCsv(@Part MultipartBody.Part file);
+
+    @GET("api/v1/generate-qr-batch")
+    Call<ResponseBody> generateAllQr();
 }

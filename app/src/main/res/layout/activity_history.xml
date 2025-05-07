@@ -1,23 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    >
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/lightBlue">
+        <TextView
+            android:id="@+id/headerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:text="@string/history"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+    </LinearLayout>
+
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="8dp"
-        >
-        <EditText
-            android:id="@+id/searchEdit"
-            android:layout_width="250dp"
+        android:paddingHorizontal="16dp"
+        android:columnCount="2">
+
+        <GridLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_columnWeight="2"
-            />
+            android:columnCount="2">
+            <TextView
+                android:id="@+id/searchLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnSpan="2"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:text="@string/cari"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <EditText
+                android:id="@+id/searchEdit"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_columnWeight="2"
+                />
+        </GridLayout>
+
         <Button
             android:id="@+id/searchButton"
             android:layout_width="wrap_content"
@@ -25,6 +61,7 @@
             android:text="@string/cari"
             android:layout_columnWeight="2"
             android:textColor="@color/white"
+            android:layout_gravity="center_vertical|bottom"
             android:background="@drawable/rounded_trans_btn"
             android:backgroundTint="@color/lightBlue"
             />
@@ -33,12 +70,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:paddingHorizontal="16dp"
         android:scrollbars="vertical">
         <TableLayout
             android:id="@+id/tableAbsensi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:stretchColumns="1"
+            android:stretchColumns="*"
             android:background="@color/gray">
 
             <TableRow>
@@ -103,4 +141,44 @@
             </TableRow>
         </TableLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/prevpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sebelumnya"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_trans_btn"
+            android:backgroundTint="@color/lightBlue"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/pageinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/halaman"
+            android:textSize="16sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:textStyle="bold"/>
+
+        <Button
+            android:id="@+id/nextpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/berikutnya"
+            android:textColor="@color/white"
+            android:background="@drawable/rounded_trans_btn"
+            android:backgroundTint="@color/lightBlue"
+            android:padding="8dp"/>
+    </LinearLayout>
+
 </LinearLayout>

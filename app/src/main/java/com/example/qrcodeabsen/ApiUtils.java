@@ -55,5 +55,30 @@ public class ApiUtils {
         }
         return filePath;
     }
+
+    public static String formatTextWithNewLine(String text, int maxLength) {
+        if (text == null) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        String[] words = text.split(" ");
+        int lineLength = 0;
+
+        for (String word : words) {
+            if (lineLength + word.length() > maxLength) {
+                result.append("\n");
+                lineLength = 0;
+            }
+            if (lineLength > 0) {
+                result.append(" ");
+                lineLength++;
+            }
+            result.append(word);
+            lineLength += word.length();
+        }
+
+        return result.toString();
+    }
 }
 

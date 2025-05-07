@@ -16,7 +16,7 @@
     <string name="absen_pulang">Absen Pulang</string>
     <string name="nisn">NISN</string>
     <string name="no">No</string>
-    <string name="ket">Keterangan</string>
+    <string name="ket">Ket</string>
     <string name="jam_masuk">Jam Masuk</string>
     <string name="datang">Datang</string>
     <string name="jam_pulang">Jam Pulang</string>
@@ -33,4 +33,8 @@
     <string name="edit_siswa">Edit Siswa</string>
     <string name="daftar">Daftar</string>
     <string name="qr_siswa">QR Siswa</string>
+    <string name="sebelumnya">Sebelumnya</string>
+    <string name="halaman">Halaman</string>
+    <string name="berikutnya">Berikutnya</string>
+    <string name="dari">Dari</string>
 </resources>

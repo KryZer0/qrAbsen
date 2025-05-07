@@ -16,7 +16,7 @@
     <string name="absen_pulang">Clock Out</string>
     <string name="nisn">NISN</string>
     <string name="no">No</string>
-    <string name="ket">Description</string>
+    <string name="ket">Desc</string>
     <string name="jam_masuk">Check-in Time</string>
     <string name="datang">Arrive</string>
     <string name="jam_pulang">Check-out Time</string>
@@ -33,4 +33,8 @@
     <string name="edit_siswa">Edit Student</string>
     <string name="daftar">List</string>
     <string name="qr_siswa">QR Siswa</string>
+    <string name="sebelumnya">Sebelumnya</string>
+    <string name="halaman">Halaman</string>
+    <string name="berikutnya">Berikutnya</string>
+    <string name="dari">Dari</string>
 </resources>

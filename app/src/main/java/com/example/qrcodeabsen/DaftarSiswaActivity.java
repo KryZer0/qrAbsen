@@ -2,10 +2,13 @@ package com.example.qrcodeabsen;
 
 import static android.content.ContentValues.TAG;
 
+import static com.example.qrcodeabsen.ApiUtils.formatTextWithNewLine;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,9 +20,16 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,16 +40,20 @@ public class DaftarSiswaActivity extends BaseActivity {
     private List<SiswaModel> data;
     private List<SiswaModel> originalData;
     private boolean isAscending = true;
-    private TextView nisn, nama, jenis_kelamin, edit;
+    private TextView nisn, nama, jenis_kelamin, edit, halaman;
     private EditText searchText;
-    private Button searchButton;
+    private Button searchButton, prevButton, nextButton;
+    private ImageButton GenerateAllQrBtn;
+    private Toast toastMessage;
+    private int currentPage = 1;
+    private int perPage = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daftar_siswa);
         stk = findViewById(R.id.tableSiswa);
-        fetchStudents();
+        fetchStudents(currentPage);
         setViewById();
         setClickListener();
     }
@@ -51,6 +65,10 @@ public class DaftarSiswaActivity extends BaseActivity {
         edit = findViewById(R.id.headerEdit);
         searchButton = findViewById(R.id.searchButton);
         searchText = findViewById(R.id.searchEdit);
+        halaman = findViewById(R.id.pageinfo);
+        prevButton = findViewById(R.id.prevpage);
+        nextButton = findViewById(R.id.nextpage);
+        GenerateAllQrBtn = findViewById(R.id.generateAllQr);
     }
 
     private void setClickListener() {
@@ -70,26 +88,79 @@ public class DaftarSiswaActivity extends BaseActivity {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+
+        nextButton.setOnClickListener(v -> {
+            currentPage++;
+            fetchStudents(currentPage);
+        });
+
+        prevButton.setOnClickListener(v -> {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchStudents(currentPage);
+            }
+        });
+
+        GenerateAllQrBtn.setOnClickListener(v -> generateAllQr());
     }
 
-    private void fetchStudents() {
-        Call<List<SiswaModel>> call = apiService.fetchSiswa();
+    private void fetchStudents(int page) {
+        Call<PaginatedResponse<SiswaModel>> call = apiService.fetchSiswa(page, perPage);
 
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<SiswaModel>> call, Response<List<SiswaModel>> response) {
+            public void onResponse(Call<PaginatedResponse<SiswaModel>> call, Response<PaginatedResponse<SiswaModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    data = response.body();
+                    data = response.body().getData();
                     originalData = data;
                     initTable();
+                    updatePaginationInfo(response.body().getCurrentPage(), response.body().getLastPage());
                 } else {
                     Toast.makeText(DaftarSiswaActivity.this, "Gagal memuat data!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<SiswaModel>> call, Throwable t) {
+            public void onFailure(Call<PaginatedResponse<SiswaModel>> call, Throwable t) {
                 Toast.makeText(DaftarSiswaActivity.this, "Terjadi kesalahan jaringan!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void generateAllQr() {
+        Call<ResponseBody> call = apiService.generateAllQr();
+
+        call.enqueue(new Callback<>() {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    if (toastMessage != null) {
+                        toastMessage.cancel();
+                    }
+                    String successMessage = ApiUtils.getSuccessMessage(response.body());
+                    toastMessage = Toast.makeText(DaftarSiswaActivity.this, successMessage, Toast.LENGTH_SHORT);
+                    toastMessage.show();
+                    finish();
+                } else {
+                    String errorMessage = ApiUtils.getErrorMessage(response.errorBody());
+                    if (toastMessage != null) {
+                        toastMessage.cancel();
+                    }
+                    toastMessage = Toast.makeText(DaftarSiswaActivity.this, errorMessage, Toast.LENGTH_SHORT);
+                    toastMessage.show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                if (toastMessage != null) {
+                    toastMessage.cancel();
+                }
+                if (t instanceof IOException) {
+                    toastMessage = Toast.makeText(DaftarSiswaActivity.this, "No Internet Connection", Toast.LENGTH_SHORT);
+                } else {
+                    toastMessage = Toast.makeText(DaftarSiswaActivity.this, "Server Error", Toast.LENGTH_SHORT);
+                }
+                toastMessage.show();
             }
         });
     }
@@ -99,6 +170,10 @@ public class DaftarSiswaActivity extends BaseActivity {
         for (int i = 0; i < data.size(); i++) {
             SiswaModel siswa = data.get(i);
             TableRow tbrow = new TableRow(this);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.WRAP_CONTENT);
+            tbrow.setLayoutParams(params);
             tbrow.addView(createTextView(String.valueOf(i + 1)));
             tbrow.addView(createTextView(String.valueOf(siswa.getNisn())));
             tbrow.addView(createTextView(siswa.getNama()));
@@ -147,12 +222,19 @@ public class DaftarSiswaActivity extends BaseActivity {
 
     private TextView createTextView(String text) {
         TextView tv = new TextView(this);
+        // kode dibawah untuk melakukan double line jika data terlalu panjang
+        // perlu bug fixing agar border squared_box sejajar.
+        text = formatTextWithNewLine(text, 20);
+
         tv.setText(text);
-        tv.setGravity(Gravity.CENTER);
+        tv.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
         tv.setPadding(16, 8, 16, 8);
         tv.setTextColor(Color.WHITE);
-        tv.setTextSize(18);
+        tv.setTextSize(16);
         tv.setBackgroundResource(R.drawable.squared_box);
+        tv.setMinimumHeight(120);
+        tv.setMaxHeight(120);
+
         return tv;
     }
 
@@ -160,10 +242,11 @@ public class DaftarSiswaActivity extends BaseActivity {
         ImageButton btn = new ImageButton(this);
         btn.setImageResource(R.drawable.edit);
         btn.setBackgroundResource(R.drawable.squared_box);
-        btn.setPadding(16, 8, 16, 8);
         btn.setOnClickListener(v -> editDataSiswa(siswa));
         btn.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         btn.setAdjustViewBounds(true);
+        btn.setMinimumHeight(120);
+        btn.setMaxHeight(120);
 
         return btn;
     }
@@ -190,10 +273,19 @@ public class DaftarSiswaActivity extends BaseActivity {
         intent.putExtra("jenis_kelamin", siswa.getJns());
         startActivity(intent);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
-        fetchStudents();
+        fetchStudents(currentPage);
+    }
+
+    private void updatePaginationInfo(int current, int last) {
+        String text = getString(R.string.halaman) + " " + current + " " + getString(R.string.dari) + " " + last;
+        halaman.setText(text);
+
+        prevButton.setEnabled(current > 1);
+        nextButton.setEnabled(current < last);
     }
 
 }

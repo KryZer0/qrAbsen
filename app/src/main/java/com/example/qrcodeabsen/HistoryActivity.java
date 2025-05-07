@@ -1,5 +1,6 @@
 package com.example.qrcodeabsen;
 
+import static com.example.qrcodeabsen.ApiUtils.formatTextWithNewLine;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,11 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import retrofit2.Call;
@@ -32,16 +30,17 @@ public class HistoryActivity extends BaseActivity {
 
     private boolean isAscending = true;
 
-    private TextView Nisn, Ket, Tanggal, JamMasuk, JamPulang;
+    private TextView Nisn, Ket, Tanggal, JamMasuk, JamPulang, pageInfo;
     private EditText searchText;
-    private Button searchButton;
-
+    private Button searchButton, prevPage, nextPage;
+    private int currentPage = 1;
+    private int perPage = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         stk = findViewById(R.id.tableAbsensi);
-        fetchHistory();
+        fetchHistory(currentPage);
 
         Nisn = findViewById(R.id.headerNisn);
         Ket = findViewById(R.id.headerKet);
@@ -50,6 +49,10 @@ public class HistoryActivity extends BaseActivity {
         JamPulang = findViewById(R.id.headerJampulang);
         searchButton = findViewById(R.id.searchButton);
         searchText = findViewById(R.id.searchEdit);
+        prevPage = findViewById(R.id.prevpage);
+        nextPage = findViewById(R.id.nextpage);
+        pageInfo = findViewById(R.id.pageinfo);
+
 
         setClickListener();
     }
@@ -78,45 +81,77 @@ public class HistoryActivity extends BaseActivity {
             }
         });
 
+        nextPage.setOnClickListener(v -> {
+            currentPage++;
+            fetchHistory(currentPage);
+        });
+
+        prevPage.setOnClickListener(v -> {
+            if (currentPage > 1) {
+                currentPage--;
+                fetchHistory(currentPage);
+            }
+        });
     }
 
-    private void fetchHistory() {
-        Call<List<AbsensiModel>> call = apiService.getHistory();
+    private void fetchHistory(int page) {
+        Call<PaginatedResponse<AbsensiModel>> call = apiService.getHistory(page, perPage);
 
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(@NonNull Call<List<AbsensiModel>> call, @NonNull Response<List<AbsensiModel>> response) {
+            public void onResponse(@NonNull Call<PaginatedResponse<AbsensiModel>> call, @NonNull Response<PaginatedResponse<AbsensiModel>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    data = response.body();
+                    data = response.body().getData();
                     originalData = data;
                     initTable();
+                    updatePaginationInfo(response.body().getCurrentPage(), response.body().getLastPage());
                 } else {
-                    Toast.makeText(HistoryActivity.this, "Gagal memuat data!", Toast.
-                            LENGTH_SHORT).show();
+                    Toast.makeText(HistoryActivity.this, "Gagal memuat data!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<AbsensiModel>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<PaginatedResponse<AbsensiModel>> call, @NonNull Throwable t) {
                 Log.e("HistoryActivity", "Error: " + t.getMessage());
-                Toast.makeText(HistoryActivity.this, "Terjadi kesalahan jaringan!",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(HistoryActivity.this, "Terjadi kesalahan jaringan!", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
+    private void updatePaginationInfo(int current, int last) {
+        String text = getString(R.string.halaman) + " " + current + " " + getString(R.string.dari) + " " + last;
+        pageInfo.setText(text);
+
+        prevPage.setEnabled(current > 1);
+        nextPage.setEnabled(current < last);
+    }
+
 
     private void initTable() {
         clearTableExceptHeader();
         for (int i = 0; i < data.size(); i++) {
             AbsensiModel absensi = data.get(i);
             TableRow tbrow = new TableRow(this);
+            String masuk = null;
+            String pulang = null;
+            if (!(absensi.getJamMasuk() == null)) {
+                masuk = absensi.getJamMasuk();
+            } else {
+                masuk = "-";
+            }
+
+            if (!(absensi.getJamPulang() == null)){
+                pulang = absensi.getJamPulang();
+            } else {
+                pulang = "-";
+            }
 
             tbrow.addView(createTextView(String.valueOf(i + 1)));
             tbrow.addView(createTextView(absensi.getNama()));
             tbrow.addView(createTextView(absensi.getketerangan()));
             tbrow.addView(createTextView(absensi.getTanggal()));
-            tbrow.addView(createTextView(absensi.getJamMasuk()));
-            tbrow.addView(createTextView(absensi.getJamPulang()));
+            tbrow.addView(createTextView(masuk));
+            tbrow.addView(createTextView(pulang));
 
             stk.addView(tbrow);
         }
@@ -159,12 +194,15 @@ public class HistoryActivity extends BaseActivity {
 
     private TextView createTextView(String text) {
         TextView tv = new TextView(this);
+        text = formatTextWithNewLine(text, 20);
+
         tv.setText(text);
-        tv.setGravity(Gravity.CENTER);
+        tv.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
         tv.setPadding(16, 8, 16, 8);
         tv.setTextColor(Color.WHITE);
         tv.setBackgroundResource(R.drawable.squared_box);
-
+        tv.setMinimumHeight(120);
+        tv.setMaxHeight(120);
         TableRow.LayoutParams params = new TableRow.LayoutParams(
                 TableRow.LayoutParams.WRAP_CONTENT,
                 TableRow.LayoutParams.WRAP_CONTENT
@@ -173,6 +211,8 @@ public class HistoryActivity extends BaseActivity {
 
         return tv;
     }
+
+
 
     private void clearTableExceptHeader() {
         TableLayout stk = findViewById(R.id.tableAbsensi);
@@ -187,61 +227,31 @@ public class HistoryActivity extends BaseActivity {
 
         List<AbsensiModel> filteredData = new ArrayList<>();
 
-        // Parsing query
-        String[] parts = query.split("=");
-        if (parts[2].contains("\"")) {
-            parts[2].replace("\"", "");
-        }
-        if (parts.length != 2) {
-            for (AbsensiModel absensi : originalData) {
-                if (absensi.getNisn().contains(query) ||
-                        absensi.getketerangan().toLowerCase().contains(query.toLowerCase()) ||
-                        absensi.getJamMasuk().contains(query) ||
-                        absensi.getJamPulang().contains(query) ||
-                        absensi.getNama().contains(query)){
-
-                    filteredData.add(absensi);
-                }
-            }
-            updateTable(filteredData);
-            return;
-        }
-
-        String key = parts[0].trim().toLowerCase();
-        String value = parts[1].trim();
+        String[] conditions = query.toLowerCase().split("&");
 
         for (AbsensiModel absensi : originalData) {
-            switch (key) {
-                case "nisn":
-                    if (absensi.getNisn().contains(value)) {
-                        filteredData.add(absensi);
-                    }
+            boolean allMatch = true;
+
+            for (String condition : conditions) {
+                condition = condition.trim();
+
+                boolean match = absensi.getketerangan().toLowerCase().contains(condition) ||
+                        absensi.getNisn().contains(condition) ||
+                        absensi.getJamMasuk().contains(condition) ||
+                        absensi.getJamPulang().contains(condition) ||
+                        absensi.getNama().toLowerCase().contains(condition) ||
+                        absensi.getTanggal().contains(condition);
+                if (!match) {
+                    allMatch = false;
                     break;
-                case "keterangan":
-                    if (absensi.getketerangan().toLowerCase().contains(value.toLowerCase())) {
-                        filteredData.add(absensi);
-                    }
-                    break;
-                case "jammasuk":
-                    if (absensi.getJamMasuk().contains(value)) {
-                        filteredData.add(absensi);
-                    }
-                    break;
-                case "jampulang":
-                    if (absensi.getJamPulang().contains(value)) {
-                        filteredData.add(absensi);
-                    }
-                    break;
-                case "nama":
-                    if (absensi.getNama().contains(value)){
-                        filteredData.add(absensi);
-                    }
-                default:
-                    // Jika key tidak dikenali, kembalikan semua data atau tampilkan pesan error
-                    updateTable(originalData);
-                    return;
+                }
+            }
+
+            if (allMatch) {
+                filteredData.add(absensi);
             }
         }
+
         updateTable(filteredData);
     }
 
@@ -262,5 +272,4 @@ public class HistoryActivity extends BaseActivity {
             stk.addView(tbrow);
         }
     }
-
 }
