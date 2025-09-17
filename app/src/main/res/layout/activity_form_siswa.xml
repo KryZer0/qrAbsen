@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
         android:gravity="center_horizontal">
 
         <LinearLayout
@@ -32,14 +31,19 @@
                 android:textColor="@color/black" />
         </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:gravity="center_horizontal">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/nomor_induk_siswa"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#000" />
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/nisn"
@@ -55,15 +59,13 @@
             android:layout_marginTop="12dp"
             android:text="@string/nama_siswa"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#000" />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/nama"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:textStyle="bold"
-            android:textColor="#fff"
             android:paddingHorizontal="15dp" />
 
         <TextView
@@ -72,14 +74,62 @@
             android:layout_marginTop="12dp"
             android:text="Jenis Kelamin"
             android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="#000" />
+            android:textStyle="bold"/>
 
         <Spinner
             android:id="@+id/jns"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:paddingHorizontal="15dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kelas"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                <Spinner
+                    android:id="@+id/kelas"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingHorizontal="15dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Jurusan"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                <Spinner
+                    android:id="@+id/jurusan"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:paddingHorizontal="15dp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -99,14 +149,6 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/generateQr"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:background="@drawable/rounded_blue_btn"
-                android:scaleType="centerInside"
-                android:src="@drawable/qr" />
         </LinearLayout>
 
         <Button
@@ -119,6 +161,7 @@
             android:textColor="#fff"
             android:textSize="16sp"
             android:textStyle="bold" />
+    </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

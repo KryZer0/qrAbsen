@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SetUpActivity"
-    android:background="#ffaec9"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
         android:id="@+id/logo"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:background="@drawable/placeholder"
+        android:background="@drawable/logo"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"/>
 
@@ -22,8 +22,8 @@
         android:layout_marginTop="8dp"
         android:background="#00a2e8"
         android:gravity="center"
-        android:text="@string/setup"
-        android:textColor="#ffaec9"
+        android:text="Setup Aplikasi"
+        android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold" />
 

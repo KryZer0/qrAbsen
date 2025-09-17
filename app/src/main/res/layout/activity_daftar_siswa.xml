@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -15,13 +16,79 @@
             android:id="@+id/headerTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/daftar"
+            android:text="Data Siswa"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/black" />
     </LinearLayout>
 
-    <!-- Scrollable Content -->
+    <!-- Search Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/cariLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cari"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+            <EditText
+                android:id="@+id/searchEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/cari"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="2"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/kelasLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kelas"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+            <Spinner
+                android:id="@+id/kelasSpin"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingHorizontal="15dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnTambahSiswa"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/rounded_blue_btn"
+                android:scaleType="centerInside"
+                android:src="@drawable/person_add_40" />
+        </LinearLayout>
+    </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -33,32 +100,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp">
-
-            <!-- Search Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
-
-                <EditText
-                    android:id="@+id/searchEdit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/cari"
-                    android:padding="8dp"/>
-
-                <Button
-                    android:id="@+id/searchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cari"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="8dp"
-                    android:backgroundTint="@color/lightBlue" />
-            </LinearLayout>
 
             <!-- Table -->
             <HorizontalScrollView
@@ -76,8 +117,11 @@
                         <TextView android:text="@string/no"  style="@style/TableHeader" />
                         <TextView android:text="@string/nisn" android:id="@+id/headerNisn" style="@style/TableHeader" />
                         <TextView android:text="@string/nama" android:id="@+id/headerNama" style="@style/TableHeader" />
+                        <TextView android:text="Kelas" android:id="@+id/headerKelas" style="@style/TableHeader" />
+                        <TextView android:text="Jurusan" android:id="@+id/headerJurusan" style="@style/TableHeader" />
                         <TextView android:text="Gender" android:id="@+id/headerJenis" style="@style/TableHeader" />
                         <TextView android:text="@string/edit" android:id="@+id/headerEdit" style="@style/TableHeader" />
+                        <TextView android:text="Hapus" android:id="@+id/headerDelete" style="@style/TableHeader" />
                     </TableRow>
                 </TableLayout>
             </HorizontalScrollView>
@@ -94,54 +138,101 @@
                     android:id="@+id/prevpage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sebelumnya"
+                    android:text="&lt;"
+                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:backgroundTint="@color/lightBlue" />
-
-                <TextView
-                    android:id="@+id/pageinfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/halaman"
-                    android:layout_marginHorizontal="16dp"
-                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/nextpage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/berikutnya"
+                    android:text="&gt;"
                     android:textColor="@color/white"
                     android:backgroundTint="@color/lightBlue" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
-
-    <!-- Footer -->
     <LinearLayout
-        android:id="@+id/footerGenerate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lightBlue"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:padding="10dp"
-        android:orientation="horizontal">
+        android:layout_marginTop="0dp">
 
         <TextView
+            android:id="@+id/pageinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Generate All Qrcode"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:text="@string/halaman"
+            android:layout_marginVertical="16dp"
+            android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/generateAllQr"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="16dp"
-            android:background="@drawable/rounded_blue_btn"
-            android:scaleType="centerInside"
-            android:src="@drawable/qr" />
     </LinearLayout>
+
+    <!-- Footer -->
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:flexWrap="wrap"
+        app:justifyContent="space_evenly"
+        android:background="@color/lightBlue"
+        app:alignItems="center">
+
+        <!-- Bagian 1: Generate All QR -->
+        <LinearLayout
+            android:id="@+id/footerGenerate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Generate All Qrcode"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/generateAllQr"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/rounded_blue_btn"
+                android:scaleType="centerInside"
+                android:src="@drawable/qr" />
+        </LinearLayout>
+
+        <!-- Bagian 2: Cetak Kartu -->
+        <LinearLayout
+            android:id="@+id/footerCetak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_margin="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cetak Kartu"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <ImageButton
+                android:id="@+id/printCard"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/rounded_blue_btn"
+                android:scaleType="centerInside"
+                android:src="@drawable/files" />
+        </LinearLayout>
+
+    </com.google.android.flexbox.FlexboxLayout>
+
 
 </LinearLayout>

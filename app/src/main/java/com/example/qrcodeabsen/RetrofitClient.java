@@ -1,8 +1,5 @@
 package com.example.qrcodeabsen;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -26,16 +23,20 @@ public class RetrofitClient {
                     .build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(urlConstant.BASE_URL+":"+urlConstant.BASE_PORT)
+                    .baseUrl(PreferenceHelper.getFullBaseUrl())
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
         return retrofit;
     }
+
+    public static void resetInstance() {
+        retrofit = null;
+    }
+
     private static String getErrorMessage(ResponseBody errorBody) {
         try {
-            // Assuming the error response is in JSON format
             JsonObject errorJson = new JsonParser().parse(errorBody.string()).getAsJsonObject();
             return errorJson.get("message").getAsString();
         } catch (IOException e) {
@@ -44,4 +45,3 @@ public class RetrofitClient {
         }
     }
 }
-

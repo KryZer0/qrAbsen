@@ -4,11 +4,16 @@ import static com.example.qrcodeabsen.ApiUtils.formatTextWithNewLine;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -33,8 +38,13 @@ public class HistoryActivity extends BaseActivity {
     private TextView Nisn, Ket, Tanggal, JamMasuk, JamPulang, pageInfo;
     private EditText searchText;
     private Button searchButton, prevPage, nextPage;
+    private Spinner kelasSpinner;
     private int currentPage = 1;
     private int perPage = 10;
+
+    private String[] kelasOtions = {
+            "-","X","XI","XII",
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +57,15 @@ public class HistoryActivity extends BaseActivity {
         Tanggal = findViewById(R.id.headerTanggal);
         JamMasuk = findViewById(R.id.headerJamasuk);
         JamPulang = findViewById(R.id.headerJampulang);
-        searchButton = findViewById(R.id.searchButton);
         searchText = findViewById(R.id.searchEdit);
+        kelasSpinner = findViewById(R.id.kelasSpin);
         prevPage = findViewById(R.id.prevpage);
         nextPage = findViewById(R.id.nextpage);
         pageInfo = findViewById(R.id.pageinfo);
+
+        ArrayAdapter<String> adapterJenis = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, kelasOtions);
+        adapterJenis.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        kelasSpinner.setAdapter(adapterJenis);
 
 
         setClickListener();
@@ -63,7 +77,6 @@ public class HistoryActivity extends BaseActivity {
         Tanggal.setOnClickListener(v -> history("tanggal"));
         JamMasuk.setOnClickListener(v -> history("jam_masuk"));
         JamPulang.setOnClickListener(v -> history("jam_pulang"));
-        searchButton.setOnClickListener(v -> searchHistory(searchText.getText().toString()));
         searchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -79,6 +92,20 @@ public class HistoryActivity extends BaseActivity {
             public void afterTextChanged(Editable s) {
                 // Tidak digunakan
             }
+        });
+        kelasSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedKelas = kelasSpinner.getSelectedItem().toString();
+                if (!selectedKelas.equals("-")) {
+                    fetchHistoryByKelas(selectedKelas, currentPage); // ambil data absensi berdasarkan kelas
+                } else {
+                    fetchHistory(currentPage); // default
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         nextPage.setOnClickListener(v -> {
@@ -118,9 +145,33 @@ public class HistoryActivity extends BaseActivity {
         });
     }
 
+    private void fetchHistoryByKelas(String selectedKelas, int page) {
+        Call<PaginatedResponse<AbsensiModel>> call = apiService.getHistoryByKelas(selectedKelas, page, perPage);
+
+        call.enqueue(new Callback<PaginatedResponse<AbsensiModel>>() {
+            @Override
+            public void onResponse(Call<PaginatedResponse<AbsensiModel>> call, Response<PaginatedResponse<AbsensiModel>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    data = response.body().getData();
+                    originalData = data;
+                    initTable();
+                    updatePaginationInfo(response.body().getCurrentPage(), response.body().getLastPage());
+                } else {
+                    Toast.makeText(HistoryActivity.this, "Gagal memuat data presensi kelas!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PaginatedResponse<AbsensiModel>> call, Throwable t) {
+                Toast.makeText(HistoryActivity.this, "Kesalahan jaringan", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void updatePaginationInfo(int current, int last) {
         String text = getString(R.string.halaman) + " " + current + " " + getString(R.string.dari) + " " + last;
         pageInfo.setText(text);
+        pageInfo.setGravity(Gravity.CENTER_HORIZONTAL);
 
         prevPage.setEnabled(current > 1);
         nextPage.setEnabled(current < last);
@@ -203,6 +254,7 @@ public class HistoryActivity extends BaseActivity {
         tv.setBackgroundResource(R.drawable.squared_box);
         tv.setMinimumHeight(120);
         tv.setMaxHeight(120);
+        tv.setEllipsize(TextUtils.TruncateAt.END);
         TableRow.LayoutParams params = new TableRow.LayoutParams(
                 TableRow.LayoutParams.WRAP_CONTENT,
                 TableRow.LayoutParams.WRAP_CONTENT
@@ -211,8 +263,6 @@ public class HistoryActivity extends BaseActivity {
 
         return tv;
     }
-
-
 
     private void clearTableExceptHeader() {
         TableLayout stk = findViewById(R.id.tableAbsensi);
@@ -225,35 +275,33 @@ public class HistoryActivity extends BaseActivity {
     private void searchHistory(String query) {
         if (originalData == null) return;
 
-        List<AbsensiModel> filteredData = new ArrayList<>();
-
-        String[] conditions = query.toLowerCase().split("&");
+        List<AbsensiModel> filtered = new ArrayList<>();
 
         for (AbsensiModel absensi : originalData) {
-            boolean allMatch = true;
+            // Konversi nilai ke String aman
+            String keterangan = absensi.getketerangan() != null ? absensi.getketerangan() : "";
+            String nisn = absensi.getNisn() != null ? absensi.getNisn() : "";
+            String jamMasuk = absensi.getJamMasuk() != null ? absensi.getJamMasuk() : "";
+            String jamPulang = absensi.getJamPulang() != null ? absensi.getJamPulang() : "";
+            String nama = absensi.getNama() != null ? absensi.getNama() : "";
+            String tanggal = absensi.getTanggal() != null ? absensi.getTanggal() : "";
 
-            for (String condition : conditions) {
-                condition = condition.trim();
+            String lowerQuery = query != null ? query.toLowerCase() : "";
 
-                boolean match = absensi.getketerangan().toLowerCase().contains(condition) ||
-                        absensi.getNisn().contains(condition) ||
-                        absensi.getJamMasuk().contains(condition) ||
-                        absensi.getJamPulang().contains(condition) ||
-                        absensi.getNama().toLowerCase().contains(condition) ||
-                        absensi.getTanggal().contains(condition);
-                if (!match) {
-                    allMatch = false;
-                    break;
-                }
-            }
+            if (keterangan.toLowerCase().contains(lowerQuery) ||
+                    nisn.toLowerCase().contains(lowerQuery) ||
+                    jamMasuk.toLowerCase().contains(lowerQuery) ||
+                    jamPulang.toLowerCase().contains(lowerQuery) ||
+                    nama.toLowerCase().contains(lowerQuery) ||
+                    tanggal.toLowerCase().contains(lowerQuery)) {
 
-            if (allMatch) {
-                filteredData.add(absensi);
+                filtered.add(absensi);
             }
         }
 
-        updateTable(filteredData);
+        updateTable(filtered);
     }
+
 
     private void updateTable(List<AbsensiModel> data) {
         clearTableExceptHeader();

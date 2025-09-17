@@ -1,184 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/headerTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/lightBlue"
+        android:gravity="center"
+        android:text="Monitoring Presensi"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Pencarian -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/searchContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/lightBlue">
-        <TextView
-            android:id="@+id/headerTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:text="@string/history"
-            android:gravity="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            />
-    </LinearLayout>
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="12dp"
         android:paddingHorizontal="16dp"
-        android:columnCount="2">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/headerTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <GridLayout
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:columnCount="2">
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/searchLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnSpan="2"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="4dp"
                 android:text="@string/cari"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold" />
+
             <EditText
                 android:id="@+id/searchEdit"
-                android:layout_width="250dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_columnWeight="2"
-                />
-        </GridLayout>
+                android:hint="Masukkan nama"
+                android:inputType="text" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/searchButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/cari"
-            android:layout_columnWeight="2"
-            android:textColor="@color/white"
-            android:layout_gravity="center_vertical|bottom"
-            android:background="@drawable/rounded_trans_btn"
-            android:backgroundTint="@color/lightBlue"
-            />
-    </GridLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingHorizontal="16dp"
-        android:scrollbars="vertical">
-        <TableLayout
-            android:id="@+id/tableAbsensi"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/kelasLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="kelas"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/kelasSpin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Tabel dengan scroll -->
+    <HorizontalScrollView
+        android:id="@+id/tableScroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingHorizontal="8dp"
+        android:scrollbars="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/searchContainer"
+        app:layout_constraintBottom_toTopOf="@id/paginationContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:stretchColumns="*"
-            android:background="@color/gray">
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
 
-            <TableRow>
-                <TextView
-                    android:id="@+id/headerNo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/squared_box"
-                    android:text="@string/no"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textStyle="bold"/>
+            <TableLayout
+                android:id="@+id/tableAbsensi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/gray"
+                android:stretchColumns="*">
 
-                <TextView
-                    android:id="@+id/headerNisn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/squared_box"
-                    android:text="@string/nama"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textStyle="bold"/>
+                <TableRow>
+                    <TextView
+                        android:id="@+id/headerNo"
+                        style="@style/TableHeaderStyle"
+                        android:text="@string/no" />
 
-                <TextView
-                    android:id="@+id/headerKet"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/squared_box"
-                    android:text="@string/ket"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/headerTanggal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/squared_box"
-                    android:text="@string/tanggal"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/headerNisn"
+                        style="@style/TableHeaderStyle"
+                        android:text="@string/nama" />
 
-                <TextView
-                    android:id="@+id/headerJamasuk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/squared_box"
-                    android:text="@string/datang"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/headerKet"
+                        style="@style/TableHeaderStyle"
+                        android:text="@string/ket" />
 
-                <TextView
-                    android:id="@+id/headerJampulang"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/squared_box"
-                    android:text="@string/pulang"
-                    android:gravity="center"
-                    android:padding="8dp"
-                    android:textStyle="bold"/>
-            </TableRow>
-        </TableLayout>
-    </ScrollView>
+                    <TextView
+                        android:id="@+id/headerTanggal"
+                        style="@style/TableHeaderStyle"
+                        android:text="@string/tanggal" />
 
+                    <TextView
+                        android:id="@+id/headerJamasuk"
+                        style="@style/TableHeaderStyle"
+                        android:text="@string/datang" />
+
+                    <TextView
+                        android:id="@+id/headerJampulang"
+                        style="@style/TableHeaderStyle"
+                        android:text="@string/pulang" />
+                </TableRow>
+            </TableLayout>
+        </ScrollView>
+    </HorizontalScrollView>
+
+    <!-- Pagination -->
+    <!-- Pagination -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/paginationContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:padding="16dp"
-        android:layout_marginTop="10dp">
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@id/pageInfoContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <Button
             android:id="@+id/prevpage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sebelumnya"
-            android:textColor="@color/white"
             android:background="@drawable/rounded_trans_btn"
             android:backgroundTint="@color/lightBlue"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:text="&lt;"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_marginEnd="36dp" />
+
+        <Button
+            android:id="@+id/nextpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_trans_btn"
+            android:backgroundTint="@color/lightBlue"
+            android:padding="8dp"
+            android:text="&gt;"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/pageInfoContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <TextView
             android:id="@+id/pageinfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/halaman"
-            android:textSize="16sp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:textStyle="bold"/>
-
-        <Button
-            android:id="@+id/nextpage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/berikutnya"
-            android:textColor="@color/white"
-            android:background="@drawable/rounded_trans_btn"
-            android:backgroundTint="@color/lightBlue"
-            android:padding="8dp"/>
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

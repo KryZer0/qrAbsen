@@ -4,14 +4,17 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"/>
 
     <uses-feature android:name="android.hardware.camera" />
 
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -40,12 +43,19 @@
         <activity android:name=".SetUpActivity" />
         <activity android:name=".Dashboard" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".MasterDataMenu"/>
         <activity android:name=".HistoryActivity" />
+        <activity android:name=".MonitoringAbsen"/>
         <activity android:name=".MenuSiswa"/>
         <activity android:name=".DaftarSiswaActivity"/>
         <activity android:name=".FormSiswaActivity"
             android:launchMode="singleTask"/>
         <activity android:name=".CsvImportActivity"/>
+        <activity android:name=".izinSiswaActivity"/>
+        <activity android:name=".MenuGuru"/>
+        <activity android:name=".FormGuruActivity"/>
+        <activity android:name=".DaftarGuruActivity"/>
+        <activity android:name=".ChangePasswordActivity"/>
     </application>
 
 </manifest>

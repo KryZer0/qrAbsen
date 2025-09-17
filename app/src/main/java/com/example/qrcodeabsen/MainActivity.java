@@ -36,6 +36,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.media.MediaPlayer;
+import android.os.Vibrator;
+import android.os.VibrationEffect;
+
 public class MainActivity extends BaseActivity {
     private static final int REQUEST_CAMERA_PERMISSION = 100;
     private final ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
@@ -215,17 +219,27 @@ public class MainActivity extends BaseActivity {
                     if (toastMessage != null) {
                         toastMessage.cancel();
                     }
+                    MediaPlayer mediaPlayer = MediaPlayer.create(MainActivity.this, R.raw.success_sound);
+                    mediaPlayer.setOnCompletionListener(MediaPlayer::release);
+                    mediaPlayer.start();
                     toastMessage = Toast.makeText(MainActivity.this, "Absen Berhasil", Toast.LENGTH_SHORT);
                     toastMessage.show();
                 } else {
-                    // Handle error
+                    // Error
+                    Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+                    if (vibrator != null) {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
+                        } else {
+                            vibrator.vibrate(300);
+                        }
+                    }
+
                     String errorMessage = "Terjadi Error";
                     if (response.errorBody() != null) {
                         errorMessage = ApiUtils.getErrorMessage(response.errorBody());
                     }
-                    if (toastMessage != null) {
-                        toastMessage.cancel();
-                    }
+                    if (toastMessage != null) toastMessage.cancel();
                     toastMessage = Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT);
                     toastMessage.show();
                 }

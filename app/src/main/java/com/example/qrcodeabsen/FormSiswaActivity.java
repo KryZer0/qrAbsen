@@ -25,12 +25,17 @@ public class FormSiswaActivity extends BaseActivity{
     private final ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
     private TextView header;
     private EditText nisn, nama;
-    private Spinner jenis;
+    private Spinner jenis, kelas, jurusan;
     private Button submit, file;
-    private ImageButton qrCodeButton;
     private Toast toastMessage;
     private String status, oldnisn;
     private String[] options = {"Laki-laki", "Perempuan"};
+    private String[] kelasOptions = {"X", "XI", "XII"};
+    private String[] jurusanOptions = {
+            "Teknik Kendaraan Ringan",
+            "Teknik Mesin Industri",
+            "Administrasi Perkantoran"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +49,21 @@ public class FormSiswaActivity extends BaseActivity{
         nisn = findViewById(R.id.nisn);
         nama = findViewById(R.id.nama);
         jenis = findViewById(R.id.jns);
+        kelas = findViewById(R.id.kelas);
+        jurusan = findViewById(R.id.jurusan);
         submit = findViewById(R.id.submitformsiswa);
         header = findViewById(R.id.headerTitle);
-        qrCodeButton = findViewById(R.id.generateQr);
         file = findViewById(R.id.filecsv);
         status = getIntent().getStringExtra("status");
 
         if (status.equals("edit")){
             header.setText(R.string.edit_siswa);
             submit.setText(R.string.edit);
-            qrCodeButton.setVisibility(View.VISIBLE);
-            qrCodeButton.setEnabled(true);
             file.setVisibility(View.GONE);
             file.setEnabled(false);
         } else {
             header.setText(R.string.tambah_siswa);
             submit.setText(R.string.tambah);
-            qrCodeButton.setVisibility(View.INVISIBLE);
-            qrCodeButton.setEnabled(false);
             file.setVisibility(View.VISIBLE);
             file.setEnabled(true);
         }
@@ -70,11 +72,19 @@ public class FormSiswaActivity extends BaseActivity{
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         jenis.setAdapter(adapter);
+
+        ArrayAdapter<String> adapterKelas = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, kelasOptions);
+        adapterKelas.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        kelas.setAdapter(adapterKelas);
+
+        ArrayAdapter<String> adapterJurusan = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, jurusanOptions);
+        adapterJurusan.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        jurusan.setAdapter(adapterJurusan);
+
     }
 
     private void setClickListener() {
         submit.setOnClickListener(v -> simpanData());
-        qrCodeButton.setOnClickListener(v -> generateQr());
         file.setOnClickListener(v -> CsvImport());
     }
     private void simpanData() {
@@ -82,6 +92,8 @@ public class FormSiswaActivity extends BaseActivity{
         String nama_siswa = nama.getText().toString();
         String jenis_kelamin = jenis.getSelectedItem().toString();
         String jns;
+        String kls = kelas.getSelectedItem().toString();
+        String jrs = jurusan.getSelectedItem().toString();
 
         if (nisnText.isEmpty() || nama_siswa.isEmpty()) {
             if (toastMessage != null) {
@@ -99,7 +111,7 @@ public class FormSiswaActivity extends BaseActivity{
         }
 
         int nisn_siswa = Integer.parseInt(nisnText);
-        SiswaModel siswa = new SiswaModel(nisn_siswa, nama_siswa, jns, "");
+        SiswaModel siswa = new SiswaModel(nisn_siswa, nama_siswa, jns, kls, jrs, "");
 
         Call<ResponseBody> call;
         if (status.contains("edit")) {
@@ -144,23 +156,40 @@ public class FormSiswaActivity extends BaseActivity{
     }
 
     private void statusForm() {
-        String number, name, gender, genderChar;
+        String number, name, gender, genderChar, kelasIntent, jurusanIntent;
 
-        if (status.equals("edit")){
+        if (status.equals("edit")) {
             number = getIntent().getStringExtra("nisn");
             name = getIntent().getStringExtra("nama");
             gender = getIntent().getStringExtra("jenis_kelamin");
-            if (gender.equals("L")){
-                genderChar = "Laki-Laki";
+            kelasIntent = getIntent().getStringExtra("kelas");
+            jurusanIntent = getIntent().getStringExtra("jurusan");
+
+            // Konversi kode gender ke string
+            if (gender.equals("L")) {
+                genderChar = "Laki-laki";
             } else {
                 genderChar = "Perempuan";
             }
+
             nisn.setText(number);
             oldnisn = number;
             nama.setText(name);
-            ArrayAdapter<String> adapter = (ArrayAdapter<String>) jenis.getAdapter();
-            int position = adapter.getPosition(genderChar);
-            jenis.setSelection(position);
+
+            // Set spinner jenis kelamin
+            ArrayAdapter<String> adapterJenis = (ArrayAdapter<String>) jenis.getAdapter();
+            int positionJenis = adapterJenis.getPosition(genderChar);
+            jenis.setSelection(positionJenis);
+
+            // Set spinner kelas
+            ArrayAdapter<String> adapterKelas = (ArrayAdapter<String>) kelas.getAdapter();
+            int positionKelas = adapterKelas.getPosition(kelasIntent);
+            kelas.setSelection(positionKelas);
+
+            // Set spinner jurusan
+            ArrayAdapter<String> adapterJurusan = (ArrayAdapter<String>) jurusan.getAdapter();
+            int positionJurusan = adapterJurusan.getPosition(jurusanIntent);
+            jurusan.setSelection(positionJurusan);
         }
     }
 
